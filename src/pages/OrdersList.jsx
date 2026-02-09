@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { orderService } from '../api/orderService.js';
-import {invoiceService} from "../api/invoiceService.js";
+import { invoiceService } from "../api/invoiceService.js";
 import {
   MdRefresh,
   MdLocalShipping,
@@ -92,7 +92,6 @@ function OrdersList() {
       await thisyearordersdata();
     }
   };
-  // Calculate order statistics from real data
 
   const calculateOrderStats = () => {
     if (!orders.length) {
@@ -127,6 +126,7 @@ function OrdersList() {
       { title: "In Progress", count: inProgress.toString(), icon: <MdHourglassEmpty size={24} />, color: "orange" },
     ]
   }
+  
   const orderStats = calculateOrderStats()
 
   const getStatusBadgeClass = (status) => {
@@ -163,22 +163,26 @@ function OrdersList() {
     }
   };
 
-const handlegenerateinvoicepdf = async (id) => {
-  try {
-    const response = await invoiceService.generateInvoicepdf(id);
+  const handlegenerateinvoicepdf = async (id) => {
+    try {
+      const response = await invoiceService.generateInvoicepdf(id);
 
-    const file = new Blob([response.data], {
-      type: "application/pdf",
-    });
+      const file = new Blob([response.data], {
+        type: "application/pdf",
+      });
 
-    const fileURL = URL.createObjectURL(file);
-    window.open(fileURL);
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL);
 
-  } catch (error) {
-    console.error("Invoice generate error:", error);
-    alert("Invoice generate nahi ho paya ");
+    } catch (error) {
+      console.error("Invoice generate error:", error);
+      alert("Invoice generate nahi ho paya ");
+    }
+  };
+
+  const orderStatsbasedinvoice = () => {
+    alert("Sorry Your Order is Not Delivered");
   }
-};
 
   return (
     <div>
@@ -339,7 +343,7 @@ const handlegenerateinvoicepdf = async (id) => {
                         <button
                           className="action-btn delete"
                           title="Generate Invoice"
-                          onClick={() => handlegenerateinvoicepdf(order._id)}
+                          onClick={() => order.orderStatus == "Delivered" ? handlegenerateinvoicepdf(order._id) : orderStatsbasedinvoice()}
                         >
                           <MdReceipt size={16} />
                         </button>

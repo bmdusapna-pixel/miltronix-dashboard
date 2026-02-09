@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -11,7 +12,7 @@ import {
     MdArrowBack
 } from 'react-icons/md';
 
-function Login() {
+export default function ForgetPassword() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -19,9 +20,7 @@ function Login() {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        rememberMe: false
     });
-
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
@@ -30,138 +29,137 @@ function Login() {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+   const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (!formData.email || !formData.password) {
-            setError("Please fill in all required fields");
-            return;
-        }
+    if (!formData.email || !formData.password) {
+        setError("Please fill in all required fields");
+        return;
+    }
 
-        try {
-            setLoading(true);
-            setError("");
+    try {
+        setLoading(true);
+        setError("");
 
-            const response = await axios.post(
-                "http://localhost:3000/api/auth/admin/login",
-                {
-                    email: formData.email,
-                    password: formData.password
-                }
-            );
-
-            const { token, admin } = response.data;
-            localStorage.setItem("token", token);
-            localStorage.setItem("user", JSON.stringify(admin));
-
-            navigate("/dashboard");
-        } catch (error) {
-            console.error(error);
-            if (error.response) {
-                setError(error.response.data.message || "Login failed");
-            } else {
-                setError("Server not responding");
+        const response = await axios.post(
+            "http://localhost:3000/api/auth/admin/forgot-password",
+            {
+                email: formData.email,
+                password: formData.password 
             }
-        } finally {
-            setLoading(false);
+        );
+
+        alert("Password updated successfully. Please login with new password.");
+
+        navigate("/login"); 
+
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            setError(error.response.data.message || "Reset failed");
+        } else {
+            setError("Server not responding");
         }
-    };
+    } finally {
+        setLoading(false);
+    }
+};
+
     return (
-        <div className="auth-container">
-            <div className="auth-background">
-                <button
-                    className="back-btn"
-                    onClick={() => navigate("/dashboard")}
-                >
-                    <MdArrowBack className="back-icon" />
-                </button>
-            </div>
-
-            <div className="auth-content-centered">
-                <div className="auth-card">
-                    <div className="auth-header">
-                        <div className="auth-logo">
-                            <MdBusiness className="logo-icon" />
-                            <span className="logo-text">Mittronix</span>
-                        </div>
-                        <h1>Welcome Back</h1>
-                        <p>Sign in to your admin dashboard</p>
-                    </div>
-
-                    {error && (
-                        <div className="error-message">
-                            {error}
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="auth-form">
-                        <div className="form-group">
-                            <label htmlFor="email">Email Address</label>
-                            <div className="input-group">
-                                <MdEmail className="input-icon" />
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter your email"
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <div className="input-group">
-                                <MdLock className="input-icon" />
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter your password"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    className="password-toggle"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                >
-                                    {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="form-options">
-                            <label className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    name="rememberMe"
-                                    checked={formData.rememberMe}
-                                    onChange={handleInputChange}
-                                />
-                                <span className="checkbox-text">Remember me</span>
-                            </label>
-                            <Link to="/forgot-password" className="forgot-link">
-                                Forgot password?
-                            </Link>
-                        </div>
-
-                        <button
-                            type="submit"
-                            className="auth-btn primary"
-                            disabled={loading}
-                        >
-                            <MdLogin size={20} />
-                            {loading ? 'Signing in...' : 'Sign In'}
-                        </button>
-                    </form>
+        <>
+            <div className="auth-container">
+                <div className="auth-background">
+                    <button
+                        className="back-btn"
+                        onClick={() => navigate(-1)}
+                    >
+                        <MdArrowBack className="back-icon" />
+                    </button>
                 </div>
-            </div>
+                <div className="auth-content-centered">
+                    <div className="auth-card">
+                        <div className="auth-header">
+                            <div className="auth-logo">
+                                <MdBusiness className="logo-icon" />
+                                <span className="logo-text">Mittronix</span>
+                            </div>
+                            <h1>Forget Your Password</h1>
+                        </div>
 
-            <style>{`
+                        {error && (
+                            <div className="error-message">
+                                {error}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="auth-form">
+                            <div className="form-group">
+                                <label htmlFor="email">Email Address</label>
+                                <div className="input-group">
+                                    <MdEmail className="input-icon" />
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter your email"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="password">New Password</label>
+                                <div className="input-group">
+                                    <MdLock className="input-icon" />
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        id="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter your New Password"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* <div className="form-options">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        name="rememberMe"
+                                        checked={formData.rememberMe}
+                                        onChange={handleInputChange}
+                                    />
+                                    <span className="checkbox-text">Remember me</span>
+                                </label>
+                                <Link to="/forgot-password" className="forgot-link">
+                                    Forgot password?
+                                </Link>
+                            </div> */}
+
+                            <button
+                                type="submit"
+                                className="auth-btn primary"
+                                disabled={loading}
+                            >
+                                <MdLogin size={20} />
+                                {loading ? 'Forget Password...' : 'Forget-Password'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <style>{`
             .back-btn {
   position: absolute; /* background ke upar */
   top: 40px;          /* thoda niche */
@@ -536,8 +534,7 @@ function Login() {
                         
                 }
             `}</style>
-        </div>
-    );
+            </div>
+        </>
+    )
 }
-
-export default Login;

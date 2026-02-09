@@ -96,7 +96,6 @@ function Notifications() {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Sending notification:', { formData, selectedUsers })
-    // Add notification sending logic here
     alert('Notification sent successfully!')
   }
 

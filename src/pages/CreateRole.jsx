@@ -25,7 +25,9 @@ function CreateRole() {
         description: '',
         permissions: {},
         isActive: true,
-        notes: ''
+        notes: '',
+        userid: '',
+        password: ''
     });
 
     const permissionModules = {
@@ -197,7 +199,7 @@ function CreateRole() {
         return count;
     };
 
-    const handleSubmit = async (e, status = 'inactive') => {
+    const handleSubmit = async (e, buttonStatus) => {
         e.preventDefault();
 
         if (!formData.name.trim()) {
@@ -219,22 +221,23 @@ function CreateRole() {
                 const moduleActions = Object.entries(actions)
                     .filter(([, hasPermission]) => hasPermission)
                     .map(([action]) => action);
-                
+
                 if (moduleActions.length > 0) {
-                    permissions.push({
-                        module,
-                        actions: moduleActions
-                    });
+                    permissions.push({ module, actions: moduleActions });
                 }
             });
 
+            // ⭐ FINAL STATUS LOGIC
+            const finalStatus = buttonStatus || (formData.isActive ? 'active' : 'inactive');
+
             const submitData = {
-                name: formData.name,
-                description: formData.description,
+                name: formData.name.trim(),
+                description: formData.description.trim(),
                 permissions,
-                status: status,
-                notes: formData.notes,
-                createdBy: 'Admin User'
+                status: finalStatus,   // ✅ ALWAYS STRING
+                notes: formData.notes.trim(),
+                userid: formData.userid.trim().toLowerCase(),
+                password: formData.password
             };
 
             await roleService.create(submitData);
@@ -304,6 +307,36 @@ function CreateRole() {
                                     />
                                     <span className="checkbox-text">Active role</span>
                                 </label>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="name">Email *</label>
+                                <input
+                                    type="email"
+                                    id="name"
+                                    name="userid"
+                                    value={formData.userid}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter your email/userid"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="name">Password *</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    placeholder="Min 6 chars, upper, lower, number, special"
+                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$"
+                                    title="Password must contain uppercase, lowercase, number, special character and be at least 6 characters"
+                                    required
+                                />
                             </div>
                         </div>
 

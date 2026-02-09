@@ -570,7 +570,6 @@ function CreateProduct() {
 
                 <div className="form-group">
                   <label htmlFor="category">Category *</label>
-
                   <select
                     id="category"
                     name="category"

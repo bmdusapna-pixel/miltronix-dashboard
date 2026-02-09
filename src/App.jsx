@@ -15,7 +15,7 @@ import OrderDetails from './pages/OrderDetails'
 import OrderAdd from './pages/OrderAdd'
 import OrderEdit from './pages/OrderEdit'
 import InvoicesList from './pages/InvoicesList'
-// import InvoiceDetails from './pages/InvoiceDetails'
+import InvoiceDetails from './pages/InvoiceDetails'
 import InvoiceAdd from './pages/InvoiceAdd'
 import InvoiceEdit from './pages/InvoiceEdit'
 import Settings from './pages/Settings'
@@ -46,6 +46,15 @@ import InventoryList from './pages/InventoryList'
 import InfoSectionsList from './pages/infosectionList'
 import CreateInfoSection from './pages/CreateinfoSection'
 import EditInfoSection from './pages/EditinfoSection'
+import ForgetPassword from './pages/ForgetPassword'
+import Editprofile from './pages/Editprofile'
+import CouponsList from './pages/CouponsList'
+import CouponsAdd from './pages/CouponsAdd'
+import CopunsAnalytics from './pages/CopunsAnalytics'
+import Couponsedit from './pages/Couponsedit'
+import CustomerList from './pages/CustomerList'
+import CustomerRefferal from './pages/CustomerRefferal'
+import UserProfile from './pages/UserProfile'
 
 function AppContent() {
   const location = useLocation()
@@ -61,6 +70,7 @@ function AppContent() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path='/forgot-password' element={<ForgetPassword />} />
 
           {/* Products Routes */}
           <Route path="/products/list" element={<ProductList />} />
@@ -83,7 +93,7 @@ function AppContent() {
           <Route path="/categories/edit/:id" element={<EditCategory />} />
           <Route path="/categories/edit" element={<EditCategory />} />
 
-          Brands Routes
+          {/* Brands Routes */}
           <Route path="/brands/list" element={<BrandsList />} />
           <Route path="/brands/create" element={<CreateBrand />} />
           <Route path="/brands/edit/:id" element={<EditBrand />} />
@@ -102,8 +112,8 @@ function AppContent() {
 
           {/* Invoices Routes */}
           <Route path="/invoices/list" element={<InvoicesList />} />
-          {/* <Route path="/invoices/details/:id" element={<InvoiceDetails />} /> */}
-          {/* <Route path="/invoices/details" element={<InvoiceDetails />} /> */}
+          <Route path="/invoices/details/:id" element={<InvoiceDetails />} />
+          <Route path="/invoices/details" element={<InvoiceDetails />} />
           <Route path="/invoices/add" element={<InvoiceAdd />} />
           <Route path='/invoices/add/:id' element={<InvoiceAdd />} />
           <Route path="/invoices/edit/:id" element={<InvoiceEdit />} />
@@ -112,9 +122,22 @@ function AppContent() {
           {/* Settings & Profile & Notifications */}
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path='/profle/edit' element={<Editprofile />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/service-request" element={<ServiceRequestList />} />
 
+          {/*Coupons Routes  */}
+          <Route path='/coupons/list' element={<CouponsList />} />
+          <Route path='/coupons/create' element={<CouponsAdd />} />
+          <Route path='/coupons/analystics' element={<CopunsAnalytics />} />
+          <Route path='/coupons/update' element={<Couponsedit />} />
+          <Route path='/coupons/update/:id' element={<Couponsedit />} />
+
+          {/*Customer Route */}
+          <Route path='/customer/list' element={<CustomerList />} />
+          <Route path='/customer/refferal' element={<CustomerRefferal />} />
+          <Route path='/customer/profile' element={<UserProfile />} />
+          <Route path='/customer/profile/:id' element={<UserProfile />} />
           {/* Service Requests Routes */}
           <Route path="/service-requests" element={<ServiceRequestList />} />
           <Route path="/service-requests/create" element={<CreateServiceRequest />} />
@@ -137,7 +160,7 @@ function AppContent() {
           <Route path="/roles" element={<RoleList />} />
           <Route path="/roles/create" element={<CreateRole />} />
           <Route path="/roles/:id" element={<RoleDetails />} />
-          <Route path="/roles/edit" element={<RoleEdit />} />
+          <Route path="/roles/edit/:id" element={<RoleEdit />} />
 
           {/* Placeholder routes for other nav items */}
 

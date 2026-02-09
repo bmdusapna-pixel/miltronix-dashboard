@@ -420,15 +420,15 @@ function BannerList() {
                                             <td>
                                                 <div className="performance-metrics">
                                                     <div className="metric">
-                                                        <span className="metric-value">{formatNumber(banner.impressions)}</span>
+                                                        <span className="metric-value">{formatNumber(banner.impressions||0)}</span>
                                                         <span className="metric-label">views</span>
                                                     </div>
                                                     <div className="metric">
-                                                        <span className="metric-value">{formatNumber(banner.clicks)}</span>
+                                                        <span className="metric-value">{formatNumber(banner.clicks||0)}</span>
                                                         <span className="metric-label">clicks</span>
                                                     </div>
                                                     <div className="metric">
-                                                        <span className="metric-value">{banner.clickRate}%</span>
+                                                        <span className="metric-value">{banner.clickRate||0}%</span>
                                                         <span className="metric-label">CTR</span>
                                                     </div>
                                                 </div>
@@ -452,13 +452,13 @@ function BannerList() {
                                                     >
                                                         <MdEdit size={16} />
                                                     </Link>
-                                                    <button
+                                                    {/* <button
                                                         onClick={() => handleDuplicate(banner._id)}
                                                         className="action-btn view"
                                                         title="Duplicate Banner"
                                                     >
                                                         <MdContentCopy size={16} />
-                                                    </button>
+                                                    </button> */}
                                                     <button
                                                         onClick={() => handleDelete(banner._id)}
                                                         className="action-btn delete"

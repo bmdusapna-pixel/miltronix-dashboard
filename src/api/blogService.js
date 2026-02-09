@@ -6,12 +6,10 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 export const blogService = {
     getAll: async (params = {}) => {
         try {
-            // Try API first
             const response = await instance.get('/blogs', { params });
             return response.data;
         } catch (apiError) {
             console.log('Blog API unavailable, using mock data', apiError);
-            // Fallback to mock data
             await delay(500);
 
             let filteredBlogs = [...mockBlogs];
@@ -72,7 +70,6 @@ export const blogService = {
     },
     create: async (data) => {
         try {
-            // REAL API CALL
             const response = await instance.post('/blogs', data, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
@@ -81,7 +78,6 @@ export const blogService = {
         } catch (apiError) {
             console.log('Blog create API unavailable, using mock data', apiError);
 
-            // 🧠 If data is FormData, convert to normal object for mock
             let plainData = {};
 
             if (data instanceof FormData) {
@@ -89,7 +85,6 @@ export const blogService = {
                     plainData[pair[0]] = pair[1];
                 }
 
-                // contentBlocks & tags wapas JSON me convert
                 plainData.contentBlocks = JSON.parse(plainData.contentBlocks || "[]");
                 plainData.tags = JSON.parse(plainData.tags || "[]");
                 plainData.seoKeywords = JSON.parse(plainData.seoKeywords || "[]");

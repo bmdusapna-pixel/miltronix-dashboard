@@ -36,46 +36,78 @@ export const bannerService = {
         }
     },
 
+    // create: async (data) => {
+    //     try {
+    //         // If there's an image file, use FormData
+    //         if (data.image && data.image instanceof File) {
+    //             const formData = new FormData();
+
+    //             // Append all form fields
+    //             Object.keys(data).forEach(key => {
+    //                 if (key === 'image') {
+    //                     formData.append('image', data.image);
+    //                 } else if (data[key] !== null && data[key] !== undefined) {
+    //                     formData.append(key, data[key]);
+    //                 }
+    //             });
+
+    //             const response = await instance.post(BANNER_API, formData, {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                 },
+    //             });
+    //             return response.data;
+    //         } else {
+    //             // Regular JSON data for URL-based images
+    //             const response = await instance.post(BANNER_API, data);
+    //             return response.data;
+    //         }
+    //     } catch (error) {
+    //         console.error('Banner service error:', error);
+    //         const errorMessage = error.response?.data?.message || error.message || 'Failed to create banner';
+    //         throw new Error(errorMessage);
+    //     }
+    // },
+
     create: async (data) => {
         try {
-            // If there's an image file, use FormData
-            if (data.image && data.image instanceof File) {
-                const formData = new FormData();
-
-                // Append all form fields
-                Object.keys(data).forEach(key => {
-                    if (key === 'image') {
-                        formData.append('image', data.image);
-                    } else if (data[key] !== null && data[key] !== undefined) {
-                        formData.append(key, data[key]);
-                    }
-                });
-
-                const response = await instance.post(BANNER_API, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                return response.data;
-            } else {
-                // Regular JSON data for URL-based images
-                const response = await instance.post(BANNER_API, data);
-                return response.data;
-            }
+            const response = await instance.post(BANNER_API, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            return response.data;
         } catch (error) {
-            console.error('Banner service error:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Failed to create banner';
+            console.error("Banner service error:", error);
+            const errorMessage =
+                error.response?.data?.message || error.message || "Failed to create banner";
             throw new Error(errorMessage);
         }
     },
 
+    // update: async (id, data) => {
+    //     try {
+    //         const response = await instance.put(`${BANNER_API}/${id}`, data);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error('Banner service error:', error);
+    //         const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+    //         throw new Error(errorMessage);
+    //     }
+    // },
+
     update: async (id, data) => {
         try {
-            const response = await instance.put(`${BANNER_API}/${id}`, data);
+            const response = await instance.put(`${BANNER_API}/${id}`, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
             return response.data;
         } catch (error) {
-            console.error('Banner service error:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+            console.error("Banner service error:", error);
+            const errorMessage =
+                error.response?.data?.message || error.message || "Failed to update banner";
             throw new Error(errorMessage);
         }
     },

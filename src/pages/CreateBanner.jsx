@@ -22,14 +22,13 @@ function CreateBanner() {
 
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
     imageUrl: "",
     imageAlt: "",
     link: "",
     linkTarget: "_self",
     placement: "homepage-hero",
     targetAudience: "All Users",
-    status: "inactive",
+    status: "InActive",
     startDate: "",
     endDate: "",
     priority: "Medium",
@@ -150,47 +149,77 @@ function CreateBanner() {
     return placements[placement] || placement;
   };
 
-  const handleSubmit = async (e, status = "inactive") => {
+  // const handleSubmit = async (e, status = "InActive") => {
+  //   e.preventDefault();
+
+  //   if (!formData.title.trim()) {
+  //     setError("Title is required");
+  //     return;
+  //   }
+
+  //   if (!selectedImage && !formData.imageUrl.trim()) {
+  //     setError("Please upload an image or provide an image URL");
+  //     return;
+  //   }
+
+  //   if (!formData.startDate || !formData.endDate) {
+  //     setError("Start date and end date are required");
+  //     return;
+  //   }
+
+  //   if (new Date(formData.startDate) >= new Date(formData.endDate)) {
+  //     setError("End date must be after start date");
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+  //     setError("");
+
+  //     const submitData = {
+  //       ...formData,
+  //       status,
+  //       startDate: new Date(formData.startDate).toISOString(),
+  //       endDate: new Date(formData.endDate).toISOString(),
+  //       createdBy: "Admin User",
+  //     };
+
+  //     if (selectedImage) {
+  //       submitData.image = selectedImage;
+  //     }
+
+  //     await bannerService.create(submitData);
+
+  //     navigate("/banners");
+  //   } catch (error) {
+  //     setError(error.message || "Failed to create banner");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleSubmit = async (e, status = "InActive") => {
     e.preventDefault();
-
-    if (!formData.title.trim()) {
-      setError("Title is required");
-      return;
-    }
-
-    if (!selectedImage && !formData.imageUrl.trim()) {
-      setError("Please upload an image or provide an image URL");
-      return;
-    }
-
-    if (!formData.startDate || !formData.endDate) {
-      setError("Start date and end date are required");
-      return;
-    }
-
-    if (new Date(formData.startDate) >= new Date(formData.endDate)) {
-      setError("End date must be after start date");
-      return;
-    }
 
     try {
       setLoading(true);
       setError("");
 
-      const submitData = {
-        ...formData,
-        status,
-        startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString(),
-        createdBy: "Admin User",
-      };
+      const data = new FormData();
+
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
+
+      data.set("status", status);
+      data.set("startDate", new Date(formData.startDate).toISOString());
+      data.set("endDate", new Date(formData.endDate).toISOString());
 
       if (selectedImage) {
-        submitData.image = selectedImage;
+        data.append("image", selectedImage); // field name must match multer
       }
 
-      await bannerService.create(submitData);
-
+      await bannerService.create(data);
       navigate("/banners");
     } catch (error) {
       setError(error.message || "Failed to create banner");
@@ -246,7 +275,7 @@ function CreateBanner() {
         {error && <div className="error-message">{error}</div>}
 
         <form
-          onSubmit={(e) => handleSubmit(e, "inactive")}
+          onSubmit={(e) => handleSubmit(e, "InActive")}
           className="banner-form"
         >
           {/* Basic Information */}
@@ -285,7 +314,7 @@ function CreateBanner() {
               </div>
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="description">Description</label>
               <textarea
                 id="description"
@@ -295,7 +324,7 @@ function CreateBanner() {
                 placeholder="Enter banner description"
                 rows={3}
               />
-            </div>
+            </div> */}
           </div>
 
           {/* Image Configuration */}

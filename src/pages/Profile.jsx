@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { MdLocationOn, MdSchool, MdWork, MdLanguage, MdEmail, MdWeb, MdVerified, MdMessage } from 'react-icons/md'
+import { MdLocationOn, MdSchool, MdWork, MdLanguage, MdEmail, MdWeb, MdVerified, MdMessage, MdArrowBack, MdEdit } from 'react-icons/md'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Profile() {
   const [isFollowing, setIsFollowing] = useState(false)
+  const navigate = useNavigate()
 
   const profileData = {
     name: 'Gaston Lapierre',
@@ -36,6 +38,30 @@ function Profile() {
         <div className="page-title-section">
           <h1 className="page-title">PROFILE</h1>
         </div>
+        <div
+          className="page-back-navigate"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            alignItems: "center"
+          }}
+        >
+          <button
+            className="btn btn-primary profile-btn"
+            onClick={() => navigate(-1)}
+          >
+            <MdArrowBack size={18} style={{ marginRight: "4px" }} />
+            Back
+          </button>
+
+          <Link to="/profle/edit">
+            <button className="btn btn-outline">
+              <MdEdit size={18} style={{ marginRight: "4px" }} />
+              Edit Profile
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="profile-container">
@@ -44,12 +70,10 @@ function Profile() {
           <div className="profile-cover">
             <img src={profileData.coverImage} alt="Cover" className="cover-image" />
           </div>
-          
           <div className="profile-header-content">
             <div className="profile-avatar">
               <img src={profileData.avatar} alt={profileData.name} className="avatar-image" />
             </div>
-            
             <div className="profile-info">
               <div className="profile-name-section">
                 <h2 className="profile-name">
@@ -58,13 +82,12 @@ function Profile() {
                 </h2>
                 <p className="profile-title">{profileData.title}</p>
               </div>
-              
               <div className="profile-actions">
                 <button className="btn btn-primary profile-btn">
                   <MdMessage size={16} />
                   Message
                 </button>
-                <button 
+                <button
                   className={`btn ${isFollowing ? 'btn-secondary' : 'btn-outline'} profile-btn`}
                   onClick={() => setIsFollowing(!isFollowing)}
                 >
@@ -85,7 +108,6 @@ function Profile() {
                 <div className="stat-label">{profileData.stats.experience.label}</div>
               </div>
             </div>
-            
             <div className="stat-item">
               <div className="stat-icon certificates">
                 <MdSchool size={20} />
@@ -95,7 +117,6 @@ function Profile() {
                 <div className="stat-label">{profileData.stats.certificates.label}</div>
               </div>
             </div>
-            
             <div className="stat-item">
               <div className="stat-icon internships">
                 <MdWork size={20} />
@@ -113,28 +134,23 @@ function Profile() {
           {/* Personal Information */}
           <div className="content-card">
             <h3>Personal Information</h3>
-            
             <div className="info-grid">
               <div className="info-item">
                 <MdWork className="info-icon" />
                 <span className="info-label">{profileData.personalInfo.jobTitle}</span>
               </div>
-              
               <div className="info-item">
                 <MdSchool className="info-icon" />
                 <span className="info-label">Went to <strong>{profileData.personalInfo.education}</strong></span>
               </div>
-              
               <div className="info-item">
                 <MdLocationOn className="info-icon" />
                 <span className="info-label">Lives in <strong>{profileData.personalInfo.location}</strong></span>
               </div>
-              
               <div className="info-item">
                 <MdWork className="info-icon" />
                 <span className="info-label">Followed by <strong>{profileData.personalInfo.followers}</strong></span>
               </div>
-              
               <div className="info-item">
                 <MdEmail className="info-icon" />
                 <span className="info-label">Email</span>
@@ -142,7 +158,6 @@ function Profile() {
                   {profileData.personalInfo.email}
                 </a>
               </div>
-              
               <div className="info-item">
                 <MdWeb className="info-icon" />
                 <span className="info-label">Website</span>
@@ -150,19 +165,16 @@ function Profile() {
                   {profileData.personalInfo.website}
                 </a>
               </div>
-              
               <div className="info-item">
                 <MdLanguage className="info-icon" />
                 <span className="info-label">Language <strong>{profileData.personalInfo.languages}</strong></span>
               </div>
-              
               <div className="info-item">
                 <div className="status-indicator active"></div>
                 <span className="info-label">Status</span>
                 <span className="status-badge active">{profileData.personalInfo.status}</span>
               </div>
             </div>
-            
             <div className="view-more">
               <button className="view-more-btn">View More</button>
             </div>

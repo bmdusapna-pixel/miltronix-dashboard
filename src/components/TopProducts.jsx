@@ -80,7 +80,7 @@ function TopProducts() {
                 {item.image && <img src={item.image} alt="" className="mini-thumb" />}
                 <span className="product-name">{item.name}</span>
               </div>
-              <div>{item.brand?.brandId || '-'}</div>
+              <div>{item.brand || '-'}</div>
               <div>{item.sales}</div>
             </div>
           ))}

@@ -8,24 +8,34 @@ import {
   MdReceipt,
   MdSettings,
   MdPerson,
+  MdPersonPin,
   MdGroup,
+  MdSecurity,
   MdNotificationAdd,
   MdReceiptLong,
+  MdRoomService,
+  MdElectricalServices,
   MdMiscellaneousServices,
   MdArticle,
   MdViewCarousel,
   MdAdminPanelSettings,
-  MdFilterAlt,
+  MdChevronLeft,
+  MdChevronRight,
   MdCardGiftcard,
-  MdLightbulb
+  MdLightbulb,
+  MdFilterAlt
 } from 'react-icons/md'
 
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [openMenu, setOpenMenu] = useState(null)
   const location = useLocation()
 
+
   const isActive = (path) => location.pathname === path
+
+  const closeMenus = () => setOpenMenu(null)
 
   return (
     <div
@@ -36,13 +46,7 @@ function Sidebar() {
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <div className="logo-icon">
-            <span>
-              <img
-                className="logo-image"
-                src="https://dapper-maamoul-8bc20d.netlify.app/image/Mittronix-logo-black.png"
-                alt="Logo"
-              />
-            </span>
+            <span><img className="logo-image" src="https://dapper-maamoul-8bc20d.netlify.app/image/Mittronix-logo-black.png" alt="Logo" /></span>
           </div>
           {!isCollapsed && <span className="logo-text">Mittronix</span>}
         </div>
@@ -53,6 +57,7 @@ function Sidebar() {
         <Link
           to="/dashboard"
           className={`nav-item ${isActive('/dashboard') || isActive('/') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdDashboard size={20} />
@@ -130,6 +135,7 @@ function Sidebar() {
         <Link
           to="/inventory"
           className={`nav-item ${isActive('/inventory') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdShoppingCart size={20} />
@@ -141,6 +147,7 @@ function Sidebar() {
         <Link
           to="/orders/list"
           className={`nav-item ${location.pathname.startsWith('/orders') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdReceiptLong size={20} />
@@ -152,17 +159,88 @@ function Sidebar() {
         <Link
           to="/invoices/list"
           className={`nav-item ${location.pathname.startsWith('/invoices') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdReceipt size={20} />
           </span>
           {!isCollapsed && <span className='nav-text'>Invoices</span>}
         </Link>
+        {/* Coupons */}
+        <div className="nav-dropdown"
+          onMouseLeave={closeMenus}
+        >
+          <button
+            className={`nav-item sidebar-accordion-btn ${openMenu === 'coupons' ? 'active' : ''}`}
+            onClick={() => setOpenMenu(openMenu === 'coupons' ? null : 'coupons')}
+          >
+            <span className="nav-icon">
+              <MdCardGiftcard size={20} />
+            </span>
+            {!isCollapsed && <span className="nav-text">Coupons</span>}
+          </button>
+
+          {openMenu === 'coupons' && (
+            <div className="nav-submenu">
+              <Link
+                to="/coupons/list"
+                className={`nav-subitem ${isActive('/coupons/list') ? 'active' : ''}`}
+              >
+                All Coupons
+              </Link>
+
+              <Link
+                to="/coupons/create"
+                className={`nav-subitem ${isActive('/coupons/create') ? 'active' : ''}`}
+              >
+                Add Coupon
+              </Link>
+              <Link
+                to="/coupons/analystics"
+                className={`nav-subitem ${isActive('/coupons/analystics') ? 'active' : ''}`}
+              >
+                Coupon Analystics
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/*Customer*/}
+        <div className="nav-dropdown" onMouseLeave={closeMenus}>
+          <button
+            className={`nav-item sidebar-accordion-btn ${openMenu === 'customer' ? 'active' : ''}`}
+            onClick={() => setOpenMenu(openMenu === 'customer' ? null : 'customer')}
+          >
+            <span className="nav-icon">
+              <MdGroup size={20} />
+            </span>
+            {!isCollapsed && <span className="nav-text">Customer</span>}
+          </button>
+
+          {openMenu === 'customer' && (
+            <div className="nav-submenu">
+              <Link
+                to="/customer/list"
+                className={`nav-subitem ${isActive('/customer/list') ? 'active' : ''}`}
+              >
+                All Customer
+              </Link>
+
+              <Link
+                to="/customer/refferal"
+                className={`nav-subitem ${isActive('/customer/refferal') ? 'active' : ''}`}
+              >
+                Referral Dashboard
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Settings */}
         <Link
           to="/settings"
           className={`nav-item ${isActive('/settings') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdSettings size={20} />
@@ -174,28 +252,29 @@ function Sidebar() {
         <Link
           to="/notifications"
           className={`nav-item ${isActive('/notifications') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdNotificationAdd size={20} />
           </span>
           {!isCollapsed && <span className="nav-text">Notifications</span>}
         </Link>
-
-        {/* Profile */}
         <Link
           to="/profile"
           className={`nav-item ${isActive('/profile') ? 'active' : ''}`}
+          onClick={closeMenus}
+
         >
           <span className="nav-icon">
             <MdPerson size={20} />
           </span>
           {!isCollapsed && <span className="nav-text">Profile</span>}
         </Link>
-
-        {/* Service Requests */}
         <Link
           to="/service-requests"
           className={`nav-item ${location.pathname.startsWith('/service-requests') ? 'active' : ''}`}
+          onClick={closeMenus}
+
         >
           <span className="nav-icon">
             <MdMiscellaneousServices size={20} />
@@ -207,6 +286,7 @@ function Sidebar() {
         <Link
           to="/blogs"
           className={`nav-item ${location.pathname.startsWith('/blogs') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdArticle size={20} />
@@ -218,6 +298,7 @@ function Sidebar() {
         <Link
           to="/banners"
           className={`nav-item ${location.pathname.startsWith('/banners') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdViewCarousel size={20} />
@@ -229,6 +310,7 @@ function Sidebar() {
         <Link
           to="/roles"
           className={`nav-item ${location.pathname.startsWith('/roles') ? 'active' : ''}`}
+          onClick={closeMenus}
         >
           <span className="nav-icon">
             <MdAdminPanelSettings size={20} />

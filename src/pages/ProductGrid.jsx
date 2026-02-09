@@ -165,7 +165,7 @@ function ProductGrid() {
                 <h3 className="product-card-title">{product.name}</h3>
 
                 {product.brand && (
-                  <p className="product-card-brand">Brand: {product.brand?.brandId}</p>
+                  <p className="product-card-brand">Brand: {product.brand}</p>
                 )}
 
                 <p className="product-card-category">{getCategoryName(product.category)}</p>

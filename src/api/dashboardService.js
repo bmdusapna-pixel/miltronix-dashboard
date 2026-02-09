@@ -5,7 +5,6 @@ import { productService } from './productService.js'
 export const dashboardService = {
   getDashboardStats: async () => {
     try {
-      // Fetch data from multiple endpoints concurrently but resilient to partial failures
       const results = await Promise.allSettled([
         orderService.getOrders(),
         orderService.getOrdersThisMonth(),
@@ -18,14 +17,12 @@ export const dashboardService = {
       const ordersLastMonth = results[2].status === 'fulfilled' ? results[2].value : { count: 0, data: [] }
       const products = results[3].status === 'fulfilled' ? results[3].value : []
 
-      // Log any rejections for debugging
       results.forEach((r, idx) => {
         if (r.status === 'rejected') {
           console.warn(`dashboardService: API call index ${idx} failed:`, r.reason?.message || r.reason)
         }
       })
 
-      // Calculate stats safely
       const totalOrders = Array.isArray(orders) ? orders.length : 0
       const ordersThisMonthCount = ordersThisMonth?.count || (Array.isArray(ordersThisMonth) ? ordersThisMonth.length : 0)
       const ordersLastMonthCount = ordersLastMonth?.count || (Array.isArray(ordersLastMonth) ? ordersLastMonth.length : 0)
@@ -56,8 +53,8 @@ export const dashboardService = {
         totalRevenue,
         ordersChange,
         customersChange,
-        completedOrdersChange: '0.3', // Default value as this needs historical data
-        revenueChange: '10.6' // Default value as this needs historical comparison
+        completedOrdersChange: '0.3', 
+        revenueChange: '10.6' 
       }
     } catch (error) {
       console.error('Error fetching dashboard stats:', error)

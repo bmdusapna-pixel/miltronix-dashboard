@@ -10,6 +10,7 @@ function RecentActivities() {
       setLoading(true)
       try {
         const orders = await orderService.getOrders()
+        console.log(orders)
         const rows = (Array.isArray(orders) ? orders : [])
           .sort((a, b) => new Date(b.createdAt || b.orderDate || 0) - new Date(a.createdAt || a.orderDate || 0))
           .slice(0, 6)
@@ -17,8 +18,11 @@ function RecentActivities() {
             id: o._id || `order-${idx}`,
             user: o.customerName || 'Customer',
             type: o.orderStatus ? `Order ${o.orderStatus}` : 'Order Created',
-            time: new Date(o.createdAt || o.orderDate || Date.now()).toLocaleString()
+            time: new Date(o.orderDate).toLocaleString("en-IN", {
+              timeZone: "Asia/Kolkata",
+            })
           }))
+
         setActivities(rows)
       } catch (e) {
         setActivities([])

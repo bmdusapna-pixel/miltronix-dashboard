@@ -1,48 +1,89 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdSettings, MdStore, MdSecurity, MdNotifications, MdPayment, MdEmail } from 'react-icons/md'
+import { SettingService } from '../api/settingService.js';
 
 function Settings() {
+  const [editingSlug, setEditingSlug] = useState(null);
+  const [tempSlug, setTempSlug] = useState("");
+
   const [generalSettings, setGeneralSettings] = useState({
-    metaTitle: '',
-    metaKeyword: '',
-    storeTheme: 'Default',
-    layout: 'Default',
-    description: ''
-  })
+    metaTitle: "",
+    metaKeyword: "",
+    storeTheme: "Default",
+    layout: "Default",
+    description: "",
+  });
+  const [loading, setLoading] = useState(true);
 
   const [storeSettings, setStoreSettings] = useState({
-    storeName: '',
-    storeOwnerName: '',
-    storePhone: '',
-    storeEmail: '',
-    storeAddress: '',
-    storeCity: '',
-    storeState: '',
-    storeCountry: '',
-    storeZip: ''
-  })
+    storeName: "",
+    storeOwnerName: "",
+    storePhone: "",
+    storeEmail: "",
+    storeAddress: "",
+    storeCity: "",
+    storeState: "",
+    storeCountry: "",
+    storeZip: "",
+  });
+  const startSlugEdit = (key) => {
+    setEditingSlug(key);
+    setTempSlug(routeSlugs[key]);
+  };
+
+  const updateSlug = (key) => {
+    if (!tempSlug.trim()) return alert("Slug cannot be empty");
+
+    const formatted = tempSlug
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9-]/g, "-");
+
+    setRouteSlugs(prev => ({
+      ...prev,
+      [key]: formatted
+    }));
+
+    setEditingSlug(null);
+    setTempSlug("");
+  };
+
 
   const [securitySettings, setSecuritySettings] = useState({
     twoFactorAuth: false,
     loginNotifications: true,
-    sessionTimeout: '30',
-    passwordExpiry: '90'
-  })
+    sessionTimeout: "30",
+    passwordExpiry: "90",
+  });
 
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: true,
     orderNotifications: true,
     marketingEmails: false,
-    systemUpdates: true
-  })
+    systemUpdates: true,
+  });
 
   const [paymentSettings, setPaymentSettings] = useState({
-    currency: 'USD',
-    taxRate: '10',
+    currency: "USD",
+    taxRate: "10",
     enablePaypal: true,
     enableStripe: true,
-    enableCod: false
-  })
+    enableCod: false,
+  });
+
+  const [routeSlugs, setRouteSlugs] = useState({
+    product: "product",
+    category: "category",
+    brand: "brand",
+    order: "order",
+    invoice: "invoice",
+    notification: "notification",
+    profile: "profile",
+    serviceRequest: "service-request",
+    blog: "blog",
+    banner: "banner",
+    role: "role",
+  });
 
   const handleGeneralChange = (e) => {
     const { name, value } = e.target
@@ -51,6 +92,14 @@ function Settings() {
       [name]: value
     }))
   }
+
+  const handleSlugChange = (e) => {
+    const { name, value } = e.target;
+    setRouteSlugs(prev => ({
+      ...prev,
+      [name]: value.toLowerCase().replace(/[^a-z0-9-]/g, "-") // sanitize slug
+    }));
+  };
 
   const handleStoreChange = (e) => {
     const { name, value } = e.target
@@ -84,11 +133,59 @@ function Settings() {
     }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('General Settings:', generalSettings)
-    console.log('Store Settings:', storeSettings)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        general: generalSettings,
+        store: storeSettings,
+        security: securitySettings,
+        notifications: notificationSettings,
+        payment: paymentSettings,
+        routes: routeSlugs
+      };
+
+      const response = await SettingService.updateSetting(payload);
+      console.log("Settings saved:", response);
+      alert("Settings saved successfully!");
+    } catch (error) {
+      console.error("Error saving settings:", error.message);
+      alert("Failed to save settings: " + error.message);
+    }
+  };
+
+  const resetForm = () => {
+    setGeneralSettings({ metaTitle: "", metaKeyword: "", storeTheme: "Default", layout: "Default", description: "" });
+    setStoreSettings({ storeName: "", storeOwnerName: "", storePhone: "", storeEmail: "", storeAddress: "", storeCity: "", storeState: "", storeCountry: "", storeZip: "" });
+    setSecuritySettings({ twoFactorAuth: false, loginNotifications: true, sessionTimeout: "30", passwordExpiry: "90" });
+    setNotificationSettings({ emailNotifications: true, orderNotifications: true, marketingEmails: false, systemUpdates: true });
+    setPaymentSettings({ currency: "USD", taxRate: "10", enablePaypal: true, enableStripe: true, enableCod: false });
+    setRouteSlugs({ product: "product", category: "category", brand: "brand", order: "order", invoice: "invoice", notification: "notification", profile: "profile", serviceRequest: "service-request", blog: "blog", banner: "banner", role: "role" });
+  };
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await SettingService.getSettings();
+        const settings = data.settings || data;
+
+        setGeneralSettings(settings.general || generalSettings);
+        setStoreSettings(settings.store || storeSettings);
+        setSecuritySettings(settings.security || securitySettings);
+        setNotificationSettings(settings.notifications || notificationSettings);
+        setPaymentSettings(settings.payment || paymentSettings);
+        setRouteSlugs(settings.routes || routeSlugs);
+      } catch (error) {
+        console.error("Error fetching settings:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  if (loading) return <p>Loading settings...</p>;
 
   return (
     <div>
@@ -100,7 +197,6 @@ function Settings() {
 
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          {/* General Settings */}
           <div className="content-card">
             <div className="settings-section-header">
               <MdSettings size={20} className="section-icon" />
@@ -131,35 +227,6 @@ function Settings() {
                   placeholder="Enter word"
                 />
               </div>
-
-              <div className="form-group">
-                <label htmlFor="storeTheme">Store Themes</label>
-                <select
-                  id="storeTheme"
-                  name="storeTheme"
-                  value={generalSettings.storeTheme}
-                  onChange={handleGeneralChange}
-                >
-                  <option value="Default">Default</option>
-                  <option value="Modern">Modern</option>
-                  <option value="Classic">Classic</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="layout">Layout</label>
-                <select
-                  id="layout"
-                  name="layout"
-                  value={generalSettings.layout}
-                  onChange={handleGeneralChange}
-                >
-                  <option value="Default">Default</option>
-                  <option value="Wide">Wide</option>
-                  <option value="Boxed">Boxed</option>
-                </select>
-              </div>
-
               <div className="form-group full-width">
                 <label htmlFor="description">Description</label>
                 <textarea
@@ -173,6 +240,79 @@ function Settings() {
               </div>
             </div>
           </div>
+          {/* <div className="content-card">
+            <div className="settings-section-header">
+              <MdSettings size={20} className="section-icon" />
+              <h3>Route Slugs</h3>
+            </div>
+
+            <div className="settings-form-grid">
+              {Object.keys(routeSlugs).map((key) => (
+                <div className="form-group" key={key}>
+                  <label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+                  <input
+                    type="text"
+                    id={key}
+                    name={key}
+                    value={routeSlugs[key]}
+                    onChange={handleSlugChange}
+                    placeholder={`Enter slug for ${key}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div> */}
+          <div className="content-card">
+            <div className="settings-section-header">
+              <MdSettings size={20} className="section-icon" />
+              <h3>Route Slugs</h3>
+            </div>
+
+            <div className="settings-form-grid">
+              {Object.keys(routeSlugs).map((key) => (
+                <div className="form-group" key={key}>
+                  <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+
+                  {editingSlug === key ? (
+                    <>
+                      <p style={{ fontSize: "12px", color: "gray" }}>
+                        Old Slug: <strong>{routeSlugs[key]}</strong>
+                      </p>
+
+                      <input
+                        type="text"
+                        value={tempSlug}
+                        onChange={(e) => setTempSlug(e.target.value)}
+                        placeholder="Enter new slug"
+                      />
+
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm"
+                        onClick={() => updateSlug(key)}
+                        style={{ marginTop: "6px" }}
+                      >
+                        Update
+                      </button>
+                    </>
+                  ) : (
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span>{routeSlugs[key]}</span>
+
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => startSlugEdit(key)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
 
           {/* Store Settings */}
           <div className="content-card">
@@ -499,7 +639,7 @@ function Settings() {
             <button type="submit" className="btn btn-primary">
               Save Settings
             </button>
-            <button type="button" className="btn btn-secondary">
+            <button type="button" className="btn btn-secondary" onClick={resetForm}>
               Reset
             </button>
           </div>

@@ -141,7 +141,6 @@ function ProductDetails() {
         </div>
       </div>
 
-
       {/* Product Content */}
       <div className="admin-content-container">
         <div className="product-overview">
@@ -261,12 +260,12 @@ function ProductDetails() {
                       <span className="detail-label">Category:</span>
                       <span className="detail-value">{category ? category.title : 'Unknown'}</span>
                     </div>
-                    {/* {product.brand && (
+                    {product.brand && (
                       <div className="detail-row">
                         <span className="detail-label">Brand:</span>
                         <span className="detail-value">{product.brand}</span>
                       </div>
-                    )} */}
+                    )}
                     {product.colour && (
                       <div className="detail-row">
                         <span className="detail-label">Color:</span>

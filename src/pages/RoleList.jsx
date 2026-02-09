@@ -87,11 +87,11 @@ function RoleList() {
             averagePermissionsPerRole:
               rolesData.length > 0
                 ? Math.round(
-                    rolesData.reduce(
-                      (sum, role) => sum + (role.permissions?.length || 0),
-                      0
-                    ) / rolesData.length
-                  )
+                  rolesData.reduce(
+                    (sum, role) => sum + (role.permissions?.length || 0),
+                    0
+                  ) / rolesData.length
+                )
                 : 0,
           },
           isCalculated: true,
@@ -161,11 +161,11 @@ function RoleList() {
         averagePermissionsPerRole:
           roles.length > 0
             ? Math.round(
-                roles.reduce(
-                  (sum, role) => sum + (role.permissions?.length || 0),
-                  0
-                ) / roles.length
-              )
+              roles.reduce(
+                (sum, role) => sum + (role.permissions?.length || 0),
+                0
+              ) / roles.length
+            )
             : 0,
       },
       isCalculated: true,
@@ -449,8 +449,8 @@ function RoleList() {
                             <p className="role-description">
                               {typeof role.description === "object"
                                 ? role.description?.text ||
-                                  role.description?.content ||
-                                  "N/A"
+                                role.description?.content ||
+                                "N/A"
                                 : role.description || "N/A"}
                             </p>
                           </div>
@@ -485,8 +485,8 @@ function RoleList() {
                           <span>
                             {typeof role.userCount === "object"
                               ? role.userCount?.count ||
-                                role.userCount?.total ||
-                                0
+                              role.userCount?.total ||
+                              0
                               : role.userCount || 0}{" "}
                             users
                           </span>
@@ -514,8 +514,8 @@ function RoleList() {
                             by{" "}
                             {typeof role.createdBy === "object"
                               ? role.createdBy?.name ||
-                                role.createdBy?.email ||
-                                "System"
+                              role.createdBy?.email ||
+                              "System"
                               : role.createdBy || "System"}
                           </div>
                         </div>
@@ -523,7 +523,7 @@ function RoleList() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/roles/edit`}
+                            to={`/roles/edit/${role._id}`}
                             className="action-btn edit"
                             title="Edit Role"
                           >

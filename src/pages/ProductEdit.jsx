@@ -69,7 +69,7 @@ function ProductEdit() {
             description: product.description || '',
             specification: product.specification || '',
             colour: product.colour || '',
-            // brand: product.brand || '',
+            brand: product.brand || '',
             isActive: product.isActive !== undefined ? product.isActive : true,
             // Assuming the product object has an 'images' array of URLs
             existingImages: product.images || [],
