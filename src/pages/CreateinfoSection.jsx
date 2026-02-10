@@ -197,7 +197,7 @@ return (
         className="btn btn-primary" 
         disabled={loading} 
         style={{ padding: "12px 20px", borderRadius: "8px", background: "#3182ce", color: "#fff", fontWeight: "600", cursor: loading ? "not-allowed" : "pointer", marginTop: "10px" }}
-      >
+      > 
         {loading ? "Creating..." : "Create InfoSection"}
       </button>
     </form>
